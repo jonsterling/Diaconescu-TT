@@ -16,11 +16,6 @@ module _ {i j} {I : Setoid {i}} {S : Setoid {j}} where
   module I = Setoid.Setoid I 
   module S = Setoid.Setoid S 
 
-  -- Ext is a predicate on functions between setoids that they respect
-  -- the equivalence relations
-  Ext : (I.T → S.T) → Set (i ⊔ j)
-  Ext f = {a b : I.T} → a I.~ b → f a S.~ f b
-
   -- ExtAC is Martin-Löf's "Extensional Axiom of Choice", which is not justified
   -- in Constructive Type Theory.
   postulate
