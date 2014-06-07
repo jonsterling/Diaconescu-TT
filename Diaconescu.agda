@@ -26,7 +26,7 @@ module _ {i j} {I : Setoid {i}} {S : Setoid {j}} where
   postulate
     ExtAC : {k : Level} (A[_] : Rel {k = k} I.T S.T)
                → ((i : I.T) → Σ S.T A[ i ])
-               → Σ[ f ∶ (I.T → S.T) ] (Ext f × ({i : I.T} → A[ i ] (f i)))
+               → Σ[ f ∶ Map I S ] ({i : I.T} → A[ i ] (f $ i))
 
 -- Given ExtAC, we have the Law of the Excluded Middle: every type is decidable
 -- The reasoning in this proof is largely derived from Danko Ilik's "Zermelo's Well-Ordering
@@ -52,18 +52,19 @@ LEM P = decide-P
 
     open Setoid.Setoid {{...}}
     
-    [f] : Σ[ f ∶ (Boolean → Boolean) ] ({x y : Boolean} → x ~ y → f x ~ f y) × ({x : Boolean} → x ~ f x)
+    [f] : Σ[ f ∶ Map Naughty Nice ] ({x : Boolean} → x ~ (f $ x))
     [f] = ExtAC {I = Naughty} {S = Nice} _~_ (λ i → i , inl idp) 
 
+    f = π₁ [f] 
+
     decide-P : P + ¬ P
-    decide-P with f tt ≟ f ff
-      where f = π₁ [f] 
+    decide-P with (f $ tt) ≟ (f $ ff)
     decide-P | inl q with ! f-rel ∙ R-resp q ∙ f-rel
       where
         open Equivalence.Equivalence equiv
-        f-rel = π₂ (π₂ [f])
+        f-rel = π₂ [f]
         R-resp : {a b : Boolean} → a == b → a ~ b
         R-resp idp = inl idp
     decide-P | inl _ | inl ()
     decide-P | inl _ | inr p = inl p
-    decide-P | inr q = inr (q ∘ (π₁ (π₂ [f])) ∘ inr)
+    decide-P | inr q = inr (q ∘ Map.ext f ∘ inr)
