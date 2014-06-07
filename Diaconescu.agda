@@ -31,7 +31,10 @@ module _ {i j} {I : Setoid {i}} {S : Setoid {j}} where
 
 -- Given ExtAC, we have the Law of the Excluded Middle: every type is decidable
 -- The reasoning in this proof is largely derived from Danko Ilik's "Zermelo's Well-Ordering
--- Theorem in Type Theory" (http://www.lix.polytechnique.fr/~danko/wott.pdf)
+-- Theorem in Type Theory" (http://www.lix.polytechnique.fr/~danko/wott.pdf). Danko has also
+-- formalized his proof in Agda-Light, though I have not seen it. However, my formulation more
+-- closely matches Martin-Löf's discussion in "100 years of Zermelo's axiom of choice: what
+-- was the problem with it?"
 LEM : {i : Level} (P : Set i) → P + ¬ P
 LEM P = decide-P
   where
